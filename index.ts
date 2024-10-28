@@ -23,15 +23,17 @@ wss.on('connection', (ws) => {
         if (data.type === 'reg') {
           const {name, password} = innerData;
           player.registerPlayer(name, password);
-          ws.send(JSON.stringify({
+          const response = {
             type: 'reg',
             data: {
-                name: innerData.name,
-                index: 0,
-                error: false,
-                errorText: ''
-            }
-        }));
+              name: innerData.name,
+              index: 0,
+              error: false,
+              errorText: ''
+            },
+            id: data.id 
+          };
+          ws.send(JSON.stringify(response));
         }
       }
       
