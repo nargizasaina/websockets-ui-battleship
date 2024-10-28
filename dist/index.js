@@ -6,6 +6,33 @@ console.log(`WebSocket server started on ws://localhost:${HTTP_PORT}`);
 wss.on('connection', (ws) => {
     console.log('New WebSocket connection established');
     ws.on('message', (message) => {
+        const stringedMessage = message.toString();
+        try {
+            const data = JSON.parse(stringedMessage);
+            console.log(`Received command: ${stringedMessage}`);
+            if (typeof data.data === 'string') {
+                const innerData = JSON.parse(data.data);
+                console.log('Inner data:', innerData);
+                if (data.type === 'reg') {
+                    ws.send(JSON.stringify({
+                        type: 'reg',
+                        data: {
+                            name: innerData.name,
+                            index: 0,
+                            error: false,
+                            errorText: ''
+                        }
+                    }));
+                }
+            }
+        }
+        catch (err) {
+            console.error(err);
+            ws.send(JSON.stringify({
+                type: 'error',
+                message: 'Invalid message format. Please send valid JSON.'
+            }));
+        }
         console.log(`Received command: ${message}`);
     });
     ws.on('close', (close) => {

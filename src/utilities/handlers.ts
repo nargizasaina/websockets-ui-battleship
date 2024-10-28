@@ -1,3 +1,7 @@
+import WebSocket from 'ws';
+import PlayerModel from '../models/player';
+import { Player } from '../models/player';
+
 const handleCommand = (ws: WebSocket, command: any) => {
   switch (command.type) {
     case 'reg':
